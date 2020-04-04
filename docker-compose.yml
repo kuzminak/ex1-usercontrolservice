@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  ex1-mysql:
+    container_name: ex1-mysql
+    image: mysql/mysql-server:8.0
+    environment:
+      MYSQL_DATABASE: usercontrolservice
+      MYSQL_ROOT_PASSWORD: usercontrolservice
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - "3306:3306"
+    restart: always

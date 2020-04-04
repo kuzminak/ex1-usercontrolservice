@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>User Control Service</title>
+    <link href="https://unpkg.com/bootstrap@4.4.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/layout.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="container-fluid">
+    <h1>User Control Service</h1>
+    <main id="app">
+        <router-view></router-view>
+    </main>
+</div>
+
+<template id="user">
+    <div>
+        <h2>{{ user.username }}</h2>
+        <b>Id: </b>
+        <div>{{ user.id }}</div>
+        <b>FamilyName: </b>
+        <div>{{ user.familyName }}</div>
+        <b>GivenName: </b>
+        <div>{{ user.givenName }}</div>
+        <b>Description: </b>
+        <div>{{ user.description }}</div>
+        <b>Address: </b>
+        <div>{{ user.address }}</div>
+        <b>CreatedAt: </b>
+        <div>{{ user.createdAt }}</div>
+        <b>UpdatedAt: </b>
+        <div>{{ user.updatedAt }}</div>
+        <br/>
+        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+        <a>
+            <router-link to="/">Back to user list</router-link>
+        </a>
+    </div>
+</template>
+
+<template id="user-list">
+    <div>
+        <div class="actions">
+            <a class="btn btn-default">
+                <router-link :to="{path: '/add-user'}">
+                    <button type="button" class="btn btn-primary">New User</button>
+                </router-link>
+            </a>
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th width="10px">ID</th>
+                <th width="10%">Username</th>
+                <th width="10%">FamilyName</th>
+                <th width="10%">GivenName</th>
+                <th width="20%">Description</th>
+                <th width="10%">Address</th>
+                <th width="15%">CreatedAt</th>
+                <th width="15%">UpdatedAt</th>
+                <th class="col-sm-2">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="user in filteredusers">
+                <td>
+                    <a>
+                        <router-link :to="{name: 'user', params: {user_id: user.id}}">{{user.id}}</router-link>
+                    </a>
+                </td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.familyName }}</td>
+                <td>{{ user.givenName }}</td>
+                <td>{{ user.description }}</td>
+                <td>{{ user.address }}</td>
+                <td>{{ user.createdAt }}</td>
+                <td>{{ user.updatedAt }}</td>
+                <td>
+                    <a>
+                        <router-link :to="{name: 'user-edit', params: {user_id: user.id}}">
+                            <button type="button" class="btn btn-info btn-sm">Edit</button>
+                        </router-link>
+                    </a>
+                    <a>
+                        <router-link :to="{name: 'user-delete', params: {user_id: user.id}}">
+                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                        </router-link>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</template>
+
+
+<template id="add-user">
+    <div>
+        <h2>Add new user</h2>
+        <form @submit="createUser">
+            <div class="form-group">
+                <label for="add-username">Username</label>
+                <input class="form-control" id="add-username" v-model="user.username" required/>
+            </div>
+            <div class="form-group">
+                <label for="add-password">Password</label>
+                <input class="form-control" id="add-password" v-model="user.password" required/>
+            </div>
+            <div class="form-group">
+                <label for="add-family-name">FamilyName</label>
+                <input class="form-control" id="add-family-name" v-model="user.familyName"/>
+            </div>
+            <div class="form-group">
+                <label for="add-given-name">GivenName</label>
+                <input class="form-control" id="add-given-name" v-model="user.givenName"/>
+            </div>
+            <div class="form-group">
+                <label for="add-description">Description</label>
+                <input class="form-control" id="add-description" v-model="user.description"/>
+            </div>
+            <div class="form-group">
+                <label for="add-address">Address</label>
+                <textarea class="form-control" id="add-address" rows="10" v-model="user.address"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+            <a class="btn btn-default">
+                <router-link to="/">Cancel</router-link>
+            </a>
+        </form>
+    </div>
+</template>
+
+<template id="user-edit">
+    <div>
+        <h2>Edit user</h2>
+        <form @submit="updateUser">
+            <div class="form-group">
+                <label for="edit-username">Username</label>
+                <input class="form-control" id="edit-username" v-model="user.username" readonly/>
+            </div>
+            <div class="form-group">
+                <label for="edit-password">Password</label>
+                <input class="form-control" id="edit-password" v-model="user.password"/>
+            </div>
+            <div class="form-group">
+                <label for="edit-family-name">FamilyName</label>
+                <input class="form-control" id="edit-family-name" v-model="user.familyName"/>
+            </div>
+            <div class="form-group">
+                <label for="add-given-name">GivenName</label>
+                <input class="form-control" id="edit-given-name" v-model="user.givenName"/>
+            </div>
+            <div class="form-group">
+                <label for="edit-description">Description</label>
+                <textarea class="form-control" id="edit-description" rows="3" v-model="user.description"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="edit-address">Address</label>
+                <textarea class="form-control" id="edit-address" rows="3" v-model="user.address"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a class="btn btn-default">
+                <router-link to="/">Cancel</router-link>
+            </a>
+        </form>
+    </div>
+</template>
+
+<template id="user-delete">
+    <div>
+        <h2>Delete user {{ user.name }}</h2>
+        <form @submit="deleteUser">
+            <p>The action cannot be undone.</p>
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a>
+                <router-link to="/">
+                    <button type="button" class="btn secondary">Cancel</button>
+                </router-link>
+            </a>
+        </form>
+    </div>
+</template>
+
+<script src="https://unpkg.com/vue@2.6.11/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-router@3.1.6/dist/vue-router.js"></script>
+<script src="https://unpkg.com/axios@0.19.2/dist/axios.min.js"></script>
+<script src="/users.js"></script>
+
+</body>
+</html>
