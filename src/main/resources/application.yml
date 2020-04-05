@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/usercontrolservice?useSSL=false&verifyServerCertificate=false
+    url: jdbc:mysql://localhost:3306/usercontrolservice?useSSL=false&verifyServerCertificate=false&allowPublicKeyRetrieval=true
     username: root
     password: usercontrolservice
     driver-class-name: com.mysql.cj.jdbc.Driver
